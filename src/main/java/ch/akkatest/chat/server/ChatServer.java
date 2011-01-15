@@ -17,8 +17,6 @@ import java.util.*;
  */
 public class ChatServer {
 
-    private static final Map<String, ChatSession> sessions = new HashMap<String, ChatSession>();
-
     public static void main(String[] args) {
         new ChatServer().start();
     }
@@ -28,6 +26,9 @@ public class ChatServer {
     }
 
     public static class ChatServerListener extends UntypedActor {
+
+        private final Map<String, ChatSession> sessions = new HashMap<String, ChatSession>();
+
         public void onReceive(Object event) {
             if (event instanceof LoginEvent) doLogin((LoginEvent)event);
             else if (event instanceof MessageEvent) broadcastMessage((MessageEvent)event);
@@ -35,7 +36,7 @@ public class ChatServer {
         }
 
         private void doLogin(LoginEvent login) {
-            ChatSession session = (ChatSession)TypedActor.newRemoteInstance(ChatSession.class, ChatSessionImpl.class, login.getClientHost(), login.getClientPort());
+            ChatSession session = TypedActor.newRemoteInstance(ChatSession.class, ChatSessionImpl.class, login.getClientHost(), login.getClientPort());
             String username = login.getUsername();
             sessions.put(username, session);
             System.out.println(username + " just logged in");
