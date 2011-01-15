@@ -1,0 +1,2 @@
+A client/server chat in Java written using Akka remote actors
+Run the ChatServer first and the how many ChatClients you want
